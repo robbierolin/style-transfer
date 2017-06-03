@@ -138,7 +138,6 @@ def content_loss_func(sess, model):
 		M = p.shape[1] * p.shape[2] # height times width of feature map
 		return (1 / float(4 * N * M)) * tf.reduce_sum(tf.pow(x - p, 2))
 	loss = _content_loss(sess.run(model['conv4_2']), model['conv4_2'])
-	#print('loss', tf.get_default_session().run(loss))
 	return loss
 
 
@@ -167,17 +166,11 @@ def style_loss_func(sess, model):
 		M = a.shape[1] * a.shape[2]
 		A = _gram_matrix(a, N, M)
 		G = _gram_matrix(x, N, M)
-		#print(G)
-		#print(sess.run(G))
 		return (1 / float(4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2))
 
 	E = [_style_loss(sess.run(model[layer_name]), model[layer_name]) for layer_name, _ in STYLE_LAYERS]
 	W = [w for _, w in STYLE_LAYERS]
 	loss = sum([(W[l] * E[l]) for l in range(len(STYLE_LAYERS))])
-	#print('W[0]', W[2])
-	#print('E[0]', tf.get_default_session().run(E[2]))
-	#print('W[0] * E[0]', W[0] * E[0])
-	#print('Style loss: ', loss)
 	return loss
 	
 
@@ -244,12 +237,3 @@ if __name__ == '__main__':
 
 				filename = 'output/%d.png' % (it)
 				save_image(filename, mixed_image)
-
-
-
-
-
-
-
-
-
